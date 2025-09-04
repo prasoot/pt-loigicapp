@@ -82,6 +82,9 @@
                                         "page_title": {
                                             "type": "string"
                                         },
+                                        "page_rank": {
+                                            "type": "string"
+                                        },
                                         "events": {
                                             "type": "array",
                                             "items": {
