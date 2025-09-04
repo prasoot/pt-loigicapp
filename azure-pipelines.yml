@@ -8,7 +8,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  resourceGroup: 'PTRG
+  resourceGroup: 'PTRG'
   location: 'australiasoutheast'
   templateFile: 'infra/template.json'
   parametersFile: 'infra/parameters.json'
@@ -24,8 +24,8 @@ stages:
         azureResourceManagerConnection: 'SvcConn_PTRG_ARM'
         subscriptionId: '4c89a1eb-0cba-4fba-9499-093b370c1a5f'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: $(resourceGroup)
-        location: $(location)
+        resourceGroupName: '$(resourceGroup)'
+        location: '$(location)'
         templateLocation: 'Linked artifact'
         csmFile: '$(Build.SourcesDirectory)/$(templateFile)'
         csmParametersFile: '$(Build.SourcesDirectory)/$(parametersFile)'
