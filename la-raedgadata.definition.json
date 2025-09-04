@@ -1,0 +1,142 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_la_raedgadata_name": {
+            "defaultValue": "la-raedgadata",
+            "type": "string"
+        },
+        "workflows_la-raedgadata_parameters_$connections": {
+            "defaultValue": {
+                "eventhubs": {
+                    "id": "/subscriptions/4c89a1eb-0cba-4fba-9499-093b370c1a5f/providers/Microsoft.Web/locations/australiasoutheast/managedApis/eventhubs",
+                    "connectionId": "/subscriptions/4c89a1eb-0cba-4fba-9499-093b370c1a5f/resourceGroups/PTRG/providers/Microsoft.Web/connections/eventhubs",
+                    "connectionName": "eventhubs"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-07-01",
+            "dependsOn": [],
+            "location": "australiasoutheast",
+            "name": "[parameters('workflows_la_raedgadata_name')]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {
+                                "eventhubs": {
+                                    "id": "/subscriptions/4c89a1eb-0cba-4fba-9499-093b370c1a5f/providers/Microsoft.Web/locations/australiasoutheast/managedApis/eventhubs",
+                                    "connectionId": "/subscriptions/4c89a1eb-0cba-4fba-9499-093b370c1a5f/resourceGroups/PTRG/providers/Microsoft.Web/connections/eventhubs",
+                                    "connectionName": "eventhubs"
+                                }
+                            },
+                            "type": "Object"
+                        }
+                    },
+                    "staticResults": {
+                        "Send_event0": {
+                            "status": "Succeeded",
+                            "outputs": {
+                                "statusCode": "OK",
+                                "headers": {
+                                    "Content-type": "application/json"
+                                },
+                                "body": "{\"status\"=\"success\"}"
+                            },
+                            "hasDelegate": false
+                        }
+                    },
+                    "triggers": {
+                        "When_a_HTTP_request_is_received": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "method": "POST",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "event_name": {
+                                            "type": "string"
+                                        },
+                                        "client_id": {
+                                            "type": "string"
+                                        },
+                                        "session_id": {
+                                            "type": "string"
+                                        },
+                                        "user_id": {
+                                            "type": "string"
+                                        },
+                                        "page_location": {
+                                            "type": "string"
+                                        },
+                                        "page_referrer": {
+                                            "type": "string"
+                                        },
+                                        "page_title": {
+                                            "type": "string"
+                                        },
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "params": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "name",
+                                                    "params"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "conditions": []
+                        }
+                    },
+                    "actions": {
+                        "Send_event": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['eventhubs']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "ContentData": "@base64(triggerBody())"
+                                },
+                                "path": "/@{encodeURIComponent('eh-gadata')}/events"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": "[parameters('workflows_la-raedgadata_parameters_$connections')]"
+                    }
+                },
+                "state": "Enabled"
+            },
+            "scale": null,
+            "tags": {},
+            "type": "Microsoft.Logic/workflows"
+        }
+    ],
+    "variables": {}
+}
